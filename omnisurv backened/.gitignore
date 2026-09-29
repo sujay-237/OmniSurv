@@ -1,0 +1,10 @@
+# Environments
+.venv/
+.env
+
+# Caches
+__pycache__/
+*.pyc
+
+# Local Media
+/evidence_storage/
