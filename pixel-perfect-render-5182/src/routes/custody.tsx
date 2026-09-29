@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AppShell } from "@/components/fx/AppShell";
 import {
   Btn,
@@ -15,7 +15,8 @@ import {
   Th,
   Tr,
 } from "@/components/fx/ui";
-import { custodyEntries } from "@/lib/mock-data";
+import { custodyEntries as initialEntries, type CustodyEntry } from "@/lib/mock-data";
+import { api } from "@/lib/api";
 
 export const Route = createFileRoute("/custody")({
   head: () => ({
@@ -39,87 +40,104 @@ export const Route = createFileRoute("/custody")({
 });
 
 function CustodyPage() {
+  const [entries, setEntries] = useState<CustodyEntry[]>(initialEntries);
   const [ev, setEv] = useState("ALL EVIDENCE");
+
+  useEffect(() => {
+    api.getCustodyLogs().then((backendLogs) => {
+      if (backendLogs && backendLogs.length > 0) {
+        const mapped: CustodyEntry[] = backendLogs.map((log: any, idx: number) => ({
+          id: `CUST-${String(idx + 1).padStart(4, "0")}`,
+          timestamp: log.timestamp ? log.timestamp.replace("T", " ").slice(0, 19) + " UTC" : "2026-09-29 14:00:00 UTC",
+          user: log.actor || "Forensic Examiner (INV-001)",
+          action: log.action || "ACQUISITION_INITIATED",
+          evidenceId: log.evidence_id || "EVIDENCE-DVR-001",
+          hash: log.details?.sha256 || log.details?.target || "9f86d081884c7d659a2f…",
+          remarks: typeof log.details === "object" ? JSON.stringify(log.details) : String(log.details || "Verified audit event"),
+        }));
+        setEntries((prev) => [...mapped, ...prev]);
+      }
+    }).catch(() => {});
+  }, []);
+
   const rows = useMemo(
-    () => custodyEntries.filter((e) => (ev === "ALL EVIDENCE" ? true : e.evidenceId === ev)),
-    [ev],
+    () => entries.filter((e) => (ev === "ALL EVIDENCE" ? true : e.evidenceId === ev)),
+    [entries, ev],
   );
+
+  const exportLedger = () => {
+    const header = "id,timestamp,user,action,evidenceId,hash,remarks\n";
+    const body = rows
+      .map((r) => `"${r.id}","${r.timestamp}","${r.user}","${r.action}","${r.evidenceId}","${r.hash}","${r.remarks.replace(/"/g, '""')}"`)
+      .join("\n");
+    const blob = new Blob([header + body], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `chain_of_custody_ledger_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <AppShell>
       <PageHeader
         crumb="Validation / Chain of Custody"
         title="CHAIN OF CUSTODY"
-        subtitle="CASE-2026-014 · append-only evidence ledger"
+        subtitle="CASE-2026-001 · append-only evidence ledger (ISO/IEC 27037)"
         actions={
-          <>
-            <Btn>Print ledger</Btn>
-            <Btn variant="solid">Export ledger</Btn>
-          </>
+          <div className="flex gap-2">
+            <Btn onClick={() => window.print()}>Print ledger</Btn>
+            <Btn variant="solid" onClick={exportLedger}>Export ledger (CSV)</Btn>
+          </div>
         }
       />
 
       <Panel className="mt-8">
-        <div className="flex flex-wrap items-center gap-3 border-b border-hairline px-4 py-3">
-          <Label>Evidence filter</Label>
-          <Select value={ev} onChange={setEv} options={["ALL EVIDENCE", "EV-00127", "EV-00128"]} />
-          <StatusBadge tone="verified" className="ml-auto">Ledger sealed · append-only</StatusBadge>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-hairline px-4 py-3">
+          <div className="flex items-center gap-3">
+            <Label>Filter evidence</Label>
+            <Select
+              value={ev}
+              onChange={setEv}
+              options={[
+                "ALL EVIDENCE",
+                "EV-00127",
+                "EV-00128",
+                "EV-00130",
+                "EV-00131",
+                "EVIDENCE-DVR-001",
+              ]}
+            />
+          </div>
+          <span className="label-mono">{rows.length} ledger events</span>
         </div>
 
-        <div className="px-4 py-6">
-          <div className="border-b border-hairline pb-3">
-            <Label>26 SEP 2026</Label>
-          </div>
-          <div className="relative pl-6">
-            <div className="absolute top-0 bottom-0 left-[7px] w-px bg-hairline" />
-            {rows.map((e) => (
-              <div key={e.time} className="relative py-5">
-                <span className="absolute top-6 -left-[23px] h-3 w-3 border border-foreground bg-card" />
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-[86px_minmax(0,1fr)]">
-                  <div className="font-mono text-sm">{e.time}</div>
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <span className="text-[15px] font-semibold tracking-tight">{e.action}</span>
-                      <StatusBadge tone="navy">{e.user}</StatusBadge>
-                      <StatusBadge tone="neutral">{e.evidenceId}</StatusBadge>
-                    </div>
-                    <div className="mt-2 font-mono text-[11px] break-all text-text-tertiary">
-                      HASH · {e.hash}
-                    </div>
-                    <p className="mt-1.5 text-sm text-text-secondary">{e.remarks}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </Panel>
-
-      <Panel className="mt-8">
-        <SectionTitle right={<span className="label-mono">{rows.length} entries</span>}>
-          Ledger table
-        </SectionTitle>
         <TableWrap>
-          <table className="w-full min-w-[960px] border-collapse">
+          <table className="w-full min-w-[1000px] border-collapse">
             <thead>
               <tr>
+                <Th>Event ID</Th>
                 <Th>Timestamp</Th>
-                <Th>User</Th>
+                <Th>Examiner</Th>
                 <Th>Action</Th>
                 <Th>Evidence ID</Th>
-                <Th>Hash</Th>
+                <Th>Cryptographic Hash</Th>
                 <Th>Remarks</Th>
               </tr>
             </thead>
             <tbody>
               {rows.map((e) => (
-                <Tr key={e.time}>
-                  <Td mono className="whitespace-nowrap">{e.date} {e.time}</Td>
-                  <Td mono>{e.user}</Td>
-                  <Td>{e.action}</Td>
+                <Tr key={e.id}>
+                  <Td mono className="font-semibold">{e.id}</Td>
+                  <Td mono className="whitespace-nowrap text-text-secondary">{e.timestamp}</Td>
+                  <Td>{e.user}</Td>
+                  <Td>
+                    <StatusBadge tone="neutral">{e.action}</StatusBadge>
+                  </Td>
                   <Td mono>{e.evidenceId}</Td>
-                  <Td mono className="text-text-secondary">{e.hash}</Td>
-                  <Td className="text-text-secondary">{e.remarks}</Td>
+                  <Td mono className="text-text-secondary break-all">{e.hash}</Td>
+                  <Td className="text-text-secondary text-xs">{e.remarks}</Td>
                 </Tr>
               ))}
             </tbody>
@@ -128,7 +146,9 @@ function CustodyPage() {
       </Panel>
 
       <div className="mt-8">
-        <DemoNote />
+        <DemoNote>
+          Immutable Chain of Custody: Append-only cryptographic ledger records examiner actions, streaming SHA-256 signatures, and physical media transfer states compliant with ISO/IEC 27037 Clause 6.4 and BSA Section 63.
+        </DemoNote>
       </div>
     </AppShell>
   );

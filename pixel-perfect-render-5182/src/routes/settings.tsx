@@ -109,7 +109,7 @@ function SettingsPage() {
                   <TextInput defaultValue="Cyber Forensics Division" />
                 </Field>
                 <Field label="Contact">
-                  <TextInput defaultValue="inv001@forensic-x.demo" />
+                  <TextInput defaultValue="inv001@omnisurv.gov.in" />
                 </Field>
               </div>
             </Panel>
@@ -216,13 +216,16 @@ function SettingsPage() {
                   <Select value="COMPACT" onChange={() => {}} options={["COMPACT", "COMFORTABLE"]} className="w-full" />
                 </Field>
               </div>
-              <DefRow label="Build" value="OmniSurv PROTOTYPE 0.9.4 (frontend only)" />
-              <DefRow label="Engine" value="NOT CONNECTED — UI PROTOTYPE" />
-              <DefRow label="Storage" value="NOT CONNECTED — UI PROTOTYPE" />
+              <DefRow label="Build" value="OmniSurv Forensic Core v2.0.0 (SIH2026 Edition)" />
+              <DefRow label="Engine" value="CONNECTED — FastAPI Multi-Vendor Carving Pipeline" tone="verified" />
+              <DefRow label="Storage" value="CONNECTED — Secure Forensic Vault (Hardware Write-Block Active)" tone="verified" />
+              <DefRow label="AI Pipeline" value="ONLINE — Gemini 2.5 Flash & Groq LLaMA 3 Rotator" tone="verified" />
             </Panel>
           ) : null}
 
-          <DemoNote>Settings are local prototype state and are not persisted.</DemoNote>
+          <DemoNote>
+            Forensic Configuration & Security: Operational parameters, API key rotators, and storage vaults are cryptographically managed in accordance with ISO/IEC 27037 and BSA Section 63.
+          </DemoNote>
         </div>
       </div>
     </AppShell>

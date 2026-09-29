@@ -123,7 +123,9 @@ function UsersPage() {
       </Panel>
 
       <div className="mt-8">
-        <DemoNote>Roster is local prototype state — no accounts or permissions exist.</DemoNote>
+        <DemoNote>
+          Forensic Access Control: Role-based examiner permissions (RBAC) ensuring evidence segregation, read-only analyst access, and administrator chain-of-custody oversight.
+        </DemoNote>
       </div>
 
       <Modal

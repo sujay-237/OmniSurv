@@ -247,7 +247,9 @@ function FindingsPage() {
       </div>
 
       <div className="mt-8">
-        <DemoNote />
+        <DemoNote>
+          Evidentiary Findings & AI Correlation: Multimodal video intelligence powered by Google Gemini and Groq LLaMA 3 for automated scene understanding, object tracking, and timeline synthesis.
+        </DemoNote>
       </div>
 
       <Modal

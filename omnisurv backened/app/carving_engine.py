@@ -43,7 +43,7 @@ def _remux_candidate(
     )
     mp4_path = MP4_CLIPS_DIR / mp4_name
 
-    if candidate.vendor == "dahua":
+    if candidate.vendor in ("dahua", "cpplus"):
         ffmpeg_result = remux_h264_to_mp4(
             candidate.raw_chunk_path,
             mp4_path,
@@ -95,6 +95,8 @@ def _remux_candidate(
         "detection_signature": candidate.signature,
         "raw_chunk_path": candidate.raw_chunk_path,
         "parsing_status": candidate.parsing_status.value,
+        "camera_id": candidate.metadata.get("camera_id", "CAM_1"),
+        "timestamp": candidate.metadata.get("timestamp"),
     }
 
 
@@ -160,8 +162,17 @@ def process_image(
 
     update_scan(evidence_id, total_size, signatures_found=signatures_found)
 
+    seen_spans: set[tuple[int, int]] = set()
+    deduped_candidates: list[CarvedCandidate] = []
+    for cand in all_candidates:
+        span = (cand.offset_start, cand.offset_end)
+        if span in seen_spans:
+            continue
+        seen_spans.add(span)
+        deduped_candidates.append(cand)
+
     recovered_clips: list[dict[str, Any]] = []
-    for candidate in all_candidates:
+    for candidate in deduped_candidates:
         clip_meta = _remux_candidate(candidate, evidence_id)
         if clip_meta is None:
             continue

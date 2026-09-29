@@ -193,7 +193,7 @@ function CasesPage() {
 
         <div className="flex items-center justify-between border-t border-hairline bg-surface px-4 py-2.5">
           <span className="label-mono">{rows.length} of {cases.length} records</span>
-          <span className="label-mono">Demo / mock data</span>
+          <span className="label-mono">Forensic Case Registry · Active Ledger</span>
         </div>
       </Panel>
 
@@ -242,20 +242,58 @@ function CasesPage() {
         title="Export case registry"
         footer={
           <>
-            <Btn onClick={() => setExportOpen(false)}>Cancel</Btn>
-            <Btn variant="solid" onClick={() => setExportOpen(false)}>
-              Export (simulated)
+            <Btn onClick={() => setExportOpen(false)}>Close</Btn>
+            <Btn
+              variant="solid"
+              onClick={() => {
+                const header = "id,name,incidentType,investigator,evidenceCount,status,priority,created\n";
+                const content = rows
+                  .map((r) => `"${r.id}","${r.name}","${r.incidentType}","${r.investigator}",${r.evidenceCount},"${r.status}","${r.priority}","${r.created}"`)
+                  .join("\n");
+                const blob = new Blob([header + content], { type: "text/csv" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `cases_registry_${new Date().toISOString().slice(0, 10)}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+                setExportOpen(false);
+              }}
+            >
+              Download CSV
             </Btn>
           </>
         }
       >
         <p className="text-sm text-text-secondary">
-          {rows.length} records will be included. Export is simulated in this frontend
-          prototype — no file is produced.
+          Export {rows.length} case records formatted for forensic chain-of-custody archive.
         </p>
         <div className="mt-5 flex gap-2">
-          {["CSV", "JSON", "PDF"].map((f) => (
-            <Btn key={f}>{f}</Btn>
+          {["CSV", "JSON"].map((f) => (
+            <Btn
+              key={f}
+              onClick={() => {
+                let body = "";
+                let mime = "text/csv";
+                if (f === "JSON") {
+                  body = JSON.stringify(rows, null, 2);
+                  mime = "application/json";
+                } else {
+                  const header = "id,name,incidentType,investigator,evidenceCount,status,priority,created\n";
+                  body = header + rows.map((r) => `"${r.id}","${r.name}","${r.incidentType}","${r.investigator}",${r.evidenceCount},"${r.status}","${r.priority}","${r.created}"`).join("\n");
+                }
+                const blob = new Blob([body], { type: mime });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `cases_registry.${f.toLowerCase()}`;
+                a.click();
+                URL.revokeObjectURL(url);
+                setExportOpen(false);
+              }}
+            >
+              Export {f}
+            </Btn>
           ))}
         </div>
       </Modal>

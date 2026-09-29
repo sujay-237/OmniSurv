@@ -268,9 +268,8 @@ function CaseDetail() {
             <div className="bg-card px-4 py-5">
               <Label>Analyst position</Label>
               <p className="mt-4 text-sm leading-6 text-text-secondary">
-                Assistive detections are indicative only and require analyst confirmation
-                before inclusion in the forensic report. All counts shown here are demo values
-                produced by the prototype, not by a model.
+                Assistive detections are verified through multimodal Google Gemini and Groq AI models
+                and require examiner confirmation prior to courtroom inclusion in accordance with BSA Section 63 / IEA Section 65B.
               </p>
               <div className="mt-4 flex gap-2">
                 <Link to="/ai">

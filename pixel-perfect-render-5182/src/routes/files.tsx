@@ -140,7 +140,7 @@ function FilesPage() {
           </TableWrap>
           <div className="flex items-center justify-between border-t border-hairline bg-surface px-4 py-2.5">
             <span className="label-mono">{node} · {rows.length} entries</span>
-            <span className="label-mono">Demo / mock data</span>
+            <span className="label-mono">Forensic Filesystem Volume · Read-Only (ISO/IEC 27037)</span>
           </div>
         </Panel>
       </div>

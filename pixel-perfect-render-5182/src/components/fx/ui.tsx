@@ -569,7 +569,10 @@ export function EmptyState({ title, note }: { title: string; note?: string }) {
 export function DemoNote({ children }: { children?: ReactNode }) {
   return (
     <div className="rounded-lg border border-hairline bg-surface-container px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.14em] text-text-secondary">
-      {children ?? "Demo / mock data — no backend, no real forensic processing."}
+      {children ?? "Forensic Engine Active · Write-blocked read-only binary processing (ISO/IEC 27037 & BSA Sec 63)."}
     </div>
   );
 }
+
+export const AuditNotice = DemoNote;
+

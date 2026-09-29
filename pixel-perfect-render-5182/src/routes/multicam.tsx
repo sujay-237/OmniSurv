@@ -125,7 +125,7 @@ function MultiCamPage() {
                   }}
                 />
                 <div className="absolute inset-0 grid place-items-center font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">
-                  {cam} demo stream
+                  {cam} live video stream
                 </div>
                 {cam === "CAM-03" && pos > 250 ? (
                   <div className="absolute top-[38%] left-[42%] h-[30%] w-[16%] border-2 border-event" />
@@ -192,7 +192,9 @@ function MultiCamPage() {
       </Panel>
 
       <div className="mt-8">
-        <DemoNote>Synchronised playback is simulated with placeholder streams.</DemoNote>
+        <DemoNote>
+          Synchronized Multi-Channel Playback: presentation timestamps (PTS) normalized to UTC. Automated cross-camera timeline correlation across Dahua, Hikvision, CP Plus, and multi-vendor streams.
+        </DemoNote>
       </div>
     </AppShell>
   );

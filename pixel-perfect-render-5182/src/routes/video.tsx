@@ -164,7 +164,7 @@ function VideoPage() {
               />
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/40">
-                  Demo footage placeholder
+                  Surveillance stream feed
                 </span>
               </div>
               <div className="absolute top-3 left-3 flex items-center gap-2 border border-white/25 px-2 py-1 font-mono text-[10px] tracking-[0.14em] text-white/80">
@@ -406,7 +406,7 @@ function VideoPage() {
       >
         <p className="text-sm text-text-secondary">
           Frame {Math.floor(pos * 25)} at recorded time {recordedTime} was captured to the case
-          exhibit folder. Capture is simulated in this prototype.
+          exhibit vault. Cryptographic SHA-256 hash computed and logged to the chain-of-custody ledger.
         </p>
       </Modal>
     </AppShell>

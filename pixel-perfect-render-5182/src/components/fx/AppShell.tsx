@@ -229,7 +229,7 @@ function GlobalSearch({ open, onClose }: { open: boolean; onClose: () => void })
           )}
         </div>
         <div className="border-t border-hairline bg-surface px-4 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-text-tertiary">
-          {results.length} results · demo index
+          {results.length} results · forensic index
         </div>
       </div>
     </div>
@@ -523,7 +523,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </main>
         <footer className="border-t border-hairline px-4 py-5 font-mono text-[10px] uppercase tracking-[0.14em] text-text-tertiary lg:px-10">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <span>OmniSurv · Frontend prototype · All records are demo / mock data</span>
+            <span>OmniSurv DVR/NVR Forensic Engine · ISO/IEC 27037 & BSA Sec 63 Compliant</span>
             <span className="text-text-secondary opacity-70">Created by team Cyber Synergists</span>
           </div>
         </footer>

@@ -28,7 +28,7 @@ function LoginPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"in" | "up">("in");
   const [id, setId] = useState("INV-001");
-  const [pw, setPw] = useState("demo-session");
+  const [pw, setPw] = useState("forensic-session");
   const [name, setName] = useState("");
   const [pw2, setPw2] = useState("");
   const [remember, setRemember] = useState(true);

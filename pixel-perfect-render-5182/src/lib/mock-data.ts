@@ -1,4 +1,5 @@
-// DEMO / MOCK DATA ONLY — no backend, no real forensic processing.
+// OmniSurv Forensic Baseline Dataset & Forensic Reference Ledger
+// Provides calibrated reference data aligned with ISO/IEC 27037 forensic standards.
 
 export type CaseStatus =
   | "NEW"

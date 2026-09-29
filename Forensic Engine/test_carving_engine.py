@@ -101,6 +101,7 @@ def test_gemini_model_configuration():
 def test_gemini_video_analysis_hook():
     """Verify analyze_video_with_gemini returns structured JSON with required keys."""
     dummy_clip = Path("evidence_storage/mp4_clips/test_gemini_dummy.mp4")
+    dummy_clip.parent.mkdir(parents=True, exist_ok=True)
     dummy_clip.touch(exist_ok=True)
 
     result = asyncio.run(analyze_video_with_gemini(str(dummy_clip)))

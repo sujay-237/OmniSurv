@@ -102,7 +102,9 @@ function SopPage() {
       </Panel>
 
       <div className="mt-8">
-        <DemoNote>Procedural reference for UI review — not legal or operational guidance.</DemoNote>
+        <DemoNote>
+          Standard Operating Procedures: Aligned with ISO/IEC 27037 standards for digital evidence handling and Section 63 of Bharatiya Sakshya Adhiniyam, 2023 (BSA Sec 63 / IEA Sec 65B).
+        </DemoNote>
       </div>
     </AppShell>
   );

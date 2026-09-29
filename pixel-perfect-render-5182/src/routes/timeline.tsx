@@ -407,7 +407,9 @@ function TimelinePage() {
       </div>
 
       <div className="mt-8">
-        <DemoNote />
+        <DemoNote>
+          Multi-Camera Timeline Reconstruction: Presentation timestamps (PTS) and frame sequence numbers are normalized to UTC across all 8 surveillance OEMs for cross-camera incident reconstruction.
+        </DemoNote>
       </div>
     </AppShell>
   );

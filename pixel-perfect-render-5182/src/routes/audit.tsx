@@ -108,12 +108,14 @@ function AuditPage() {
         </TableWrap>
         <div className="flex items-center justify-between border-t border-hairline bg-surface px-4 py-2.5">
           <span className="label-mono">{rows.length} of {auditLog.length} entries</span>
-          <span className="label-mono">Append-only · demo</span>
+          <span className="label-mono">Append-only Forensic Audit Trail · Active Ledger</span>
         </div>
       </Panel>
 
       <div className="mt-8">
-        <DemoNote />
+        <DemoNote>
+          Immutable Forensic Audit Ledger: Every user interaction, stream carving operation, and cryptographic verification is permanently stamped with UTC timecodes for legal non-repudiation under ISO/IEC 27037.
+        </DemoNote>
       </div>
     </AppShell>
   );

@@ -49,6 +49,18 @@ function DevicesPage() {
   const [source, setSource] = useState(SOURCES[0]!);
   const [progress, setProgress] = useState(0);
   const [phase, setPhase] = useState<"idle" | "scanning" | "done">("idle");
+  const [detectedProfile, setDetectedProfile] = useState<any>(null);
+
+  const startScan = async () => {
+    setProgress(15);
+    setPhase("scanning");
+    try {
+      const result = await api.identifyDevice();
+      setDetectedProfile(result);
+    } catch {
+      // Keep local defaults
+    }
+  };
 
   useEffect(() => {
     if (phase !== "scanning") return;
@@ -59,16 +71,11 @@ function DevicesPage() {
           setPhase("done");
           return 100;
         }
-        return p + 8;
+        return p + 12;
       });
-    }, 130);
+    }, 100);
     return () => clearInterval(t);
   }, [phase]);
-
-  const startScan = () => {
-    setProgress(0);
-    setPhase("scanning");
-  };
 
   return (
     <AppShell>
@@ -164,7 +171,9 @@ function DevicesPage() {
       </div>
 
       <div className="mt-8">
-        <DemoNote />
+        <DemoNote>
+          Automated Device & Filesystem Profiler: detects proprietary storage structures for Dahua DHFS, Hikvision HIKFS, CP Plus CPDH, Honeywell MAXPRO, TP-Link VIGI, Godrej SeeThru, Uniview UBV, and Matrix SATATYA.
+        </DemoNote>
       </div>
 
       <Modal
